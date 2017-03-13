@@ -1,0 +1,86 @@
+.TH LOGFORW "1" "2012-01-16" "Log forward utility" "User Commands"
+
+.SH NAME
+logforw \- forward changes in files to syslog
+
+.SH SYNOPSYS
+.B logforw
+.B [ \-v ]
+.B [ \-d ]
+.B [ \-s\ \fIseconds\fR ]
+.B [ \-l\ \fIlogfile\fR ]
+.B [ \-p\ \fIpattern\fR\]
+.B [ \-x\ \fIpattern\fR\]
+.B \fIname\fR...]...
+
+.SH DESCRIPTION
+This program runs in the background as a daemon and
+watches files. Forwards lines as they are appended to
+these files to the syslog facility.
+
+.TP
+.B \-v\fR or \fB\--verbose\fR
+to print verbose messages.
+
+.TP
+.B \-d\fR or \fB\--debug\fR
+debug mode, do not daemonize, run in the foreground.
+
+.TP
+.B \-s\fR or \fB\--sleep\fR
+Sleep delay in seconds in the main daemon loop.
+
+.TP
+.B \-l \fIlogfile\fR or \fB\--logfile\fR \fIlogfile\fR
+log file to use, the default is
+.IR /var/tmp/logforw/logforw.log .
+The directory for the log files should be owned by
+userid the daemon is running under. It is best to create
+this directory manually beforehand.
+
+.TP
+.B \-p \fIpattern\fR or \fB\--pattern\fR \fIpattern\fR
+is a pattern to match against the file names. The pattern
+uses the same metacharacters and syntax as for file names.
+
+.TP
+.B \-x \fIpattern\fR or \fB\--pattern\fR \fIpattern\fR
+is a pattern to exclude files. Matching files will be
+excluded.
+
+.TP
+.B \fIname\fR
+is the name of a file or directory. If a directory is
+specified it will be scanned for all files matching the
+pattern. You can specifiy the pattern repeatedly between
+the list of names, always the last one will be effective.
+
+.PP
+Note that the file names would be always absolute paths,
+preceded by the current working directory before the match.
+
+.PP
+The program builds the list of files as specified above and then
+periodically checks if their actual size or modification date
+changed. (The current actual size of the file is checked by a
+seek to the end of the file instead of just checking the file
+header.)
+
+.PP
+If it did, forwards the differences line by line from
+the last remembered position up to the end of the file.
+
+.PP
+If the amount of data added to a file during a scan is suspiciously
+large only the first 132 characters will be forwarded, to avoid
+jamming the syslog server.
+
+.PP
+If a file gets deleted in a directory it is removed from the list
+and newly created files are dynamically added.
+
+.PP
+All messages are sent to the local syslog daemon which will process
+and forward them if configured to do so.
+
+

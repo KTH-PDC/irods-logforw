@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# Print status for the log forward daemon.
+
+# Const.
+SUCCESS=0
+FAILURE=1
+
+# Print help.
+case $1 in
+-h|-help|--help)
+	cat <<!EOF
+This script prints the status for all running log forward
+daemons.
+Usage:
+    logforw-status
+!EOF
+	exit $FAILURE
+	;;
+esac
+
+# Get pids of the running daemon(s) and kill them.
+ps -ef | egrep -e '/logforw |logforw ' | grep -v grep | \
+while read USERNAME PID REST
+do
+	printf "%8d %8s %s\n" $PID $USERNAME "$REST"
+done
+
+# Finish.
+exit $SUCCESS
+

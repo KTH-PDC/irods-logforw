@@ -1,0 +1,115 @@
+
+
+
+        Logforw utility
+
+This is a readme file describing the log forward utility.
+
+
+    Summary
+
+This directory contains files for the log forward
+utility. The program starts up and runs as a daemon in
+the background. It accepts a patterns and a list of files
+and directories. The pattern will be used to match against
+the actual file names. Patterns are specified as wildcard
+expressions. The default pattern is '*', that is to match
+all files. It is possible to specify patterns repeatedly and
+always the last one is effective. Note that the file names would
+be always absolute paths, preceded by the current working directory
+before the match.
+
+If a directory is specified instead of a file, that directory
+and all subdirectories will be scanned for files.
+
+The program builds the list of files as specified above and then
+periodically checks if their actual size or modification date
+changed. (The current actual size of the file is checked by a
+seek to the end of the file instead of just checking the file
+header.)
+
+If it did, forwards the differences line by line from
+the last remembered position up to the end of the file.
+
+If the amount of data added to a file during a scan is suspiciously
+large only the first 132 characters will be forwarded, to avoid
+jamming the syslog server. In this case the first line will be printed
+masking out the non-printable characters since this cases tend to
+be binary files.
+
+If a file gets deleted in a directory it is removed from the list
+and newly created files are dynamically added.
+
+All messages are sent to the local syslog daemon which will process
+and forward them if configured to do so.
+
+
+    Files
+
+Files in this directory are:
+Makefile            make file for the compilation
+README              this file
+logforw-errpt       start up daemons enabling forwarding errpt messages
+logforw-errpt.1     manual page for logforw-errpt
+logforw-start       script to start the daemon
+logforw-start.1     manual page for the startup script
+logforw-status      scripint to print status for the log forward daemon
+logforw-status.1    manual page for the log forward status script
+logforw-stop        shutdown script for the log forward daemon
+logforw-stop.1      manual page for the shutdown script
+logforw.1           manual pages for the log forward daemon
+logforw.c           source program
+
+
+    Installation
+
+The directory contains the source file and a make file.
+You will need an ANSI C compiler to compile. The calls
+comfirm to POSIX 1.
+
+In the current directory issue:
+  make clean
+  make
+which should result in the logforw executable. The executable
+then can be copied to the destination directory:
+  make install
+which will put the executable under /usr/local/bin as default.
+
+The make file responds to the following targets:
+all             which is the default, to compile the utility
+clean           remove binary files
+distclean       cleanup before making distribution
+install         copy binaries and manual pages to destination
+uninstall       remove installed files from the system
+dist            will create an installation tarball
+start           start daemons
+status          print status of the running daemons
+stop            stop running daemons
+test            will run a simple test
+
+
+    Uninstall
+
+To uninstall the utility stop the running daemons using logforw-shutdown.
+Then issue
+  make uninstall
+to remove all installed files.
+
+
+    Usage
+
+The usual -h, -help, --help will give a short help.
+
+There are manual pages, logforw.1 should be under the
+/usr/local/man/man1 directory. It could be also viewed
+as nroff -man logforw.1 in the current directory.
+
+To watch files ending with .log under /var/app/logs directory
+do:
+    logforw -f app -p '.*\.log$' /var/app/logs
+which will use facility name 'app' in the syslog messages.
+
+Watch all files in the current directory:
+    logforw '.*' .
+
+

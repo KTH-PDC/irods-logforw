@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# Start log forwarding.
+
+# Const.
+SUCCESS=0
+FAILURE=1
+
+# Print help.
+case $1 in
+-h|-help|--help)
+	cat <<!EOF
+This script starts up log forwarding.
+Usage
+    logforw-start [v]
+where
+    -v          for verbose logging
+!EOF
+	;;
+esac
+
+# Delay.
+DELAY=60
+
+# Home.
+cd
+
+# Shut down first.
+logforw-stop
+
+# Remove default log file.
+rm -f /var/tmp/logforw/logforw.log
+
+# Start watching mdsafis logs.
+case $1 in
+-v|--verbose|-verbose|verbose)
+
+	# Verbose start with short delay.
+	logforw -v -s $DELAY \
+		-p '/var/lib/irods/iRODS/server/log/rodsLog.*' \
+		/var/lib/irods/iRODS/server/log
+	;;
+*)
+
+	# No verbose long delay.
+	logforw -s $DELAY \
+		-p '/var/lib/irods/iRODS/server/log/rodsLog.*' \
+		/var/lib/irods/iRODS/server/log
+	;;
+esac
+
+# Start errpt forwarding.
+#logforw-errpt
+
+# Show status.
+logforw-status
+
+# Finish.
+exit $SUCCESS
+

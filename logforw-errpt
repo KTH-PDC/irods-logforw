@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# Enable errpt reporting for the log forward daemon.
+
+# Const.
+SUCCESS=0
+FAILURE=1
+
+# Error reporting output log file.
+ERRLOG=errpt.log
+
+# Print help.
+case $1 in
+-h|-help|--help)
+	cat <<!EOF
+This script makes it possible for logforw to forward
+the AIX errpt messages as well.
+Usage:
+    logforw-errpt
+!EOF
+	exit $FAILURE
+	;;
+esac
+
+# Run errpt in the background reporting into a file.
+nohup errpt -c >$ERRLOG 2>&1 &
+if [ $? -ne 0 ]
+then
+	echo "Error starting errpt in the background"
+	cat $ERRLOG
+	exit $FAILURE
+fi
+logforw -f logforw-errpt -l logforw-errpt.log $ERRLOG
+if [ $? -ne 0 ]
+then
+	echo "Error starting up logforw"
+	exit $FAILURE
+fi
+
+# Finish.
+exit $SUCCESS
+

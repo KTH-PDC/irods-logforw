@@ -1,0 +1,14 @@
+.TH LOGFORW-ERRPT "1" "2012-01-16" "Log forward utility" "User Commands"
+
+.SH NAME
+logforw-errpt \- forward errpt entries to syslog
+
+.SH SYNOPSYS
+.B logforw-errpt
+
+.SH DESCRIPTION
+This is a utility script which will enable forwarding errpt entries
+to syslog. It starts up two daemons, first runs errpt contigous
+reporting client in the background then starts an instance of
+logforw watching this file. It uses the facility code logforw-errpt.
+
