@@ -3,7 +3,7 @@
 #
 Summary: Log forwarder for irods
 Name: logforw
-Version: 1.0.0
+Version: 1.0.1
 Release: 1
 License: Simplified BSD
 Group: Applications/System
@@ -58,3 +58,5 @@ cp irods-%{name}-%{version}/logforw-stop.1     %{buildroot}/usr/local/share/man/
 * Wed Mar 7 2018 Ilker Manap <manap@kth.se>
 * Added spec file for building rpm
 
+* Thu Mar 15 2018 Ilari Korhonen <ilarik@kth.se?
+* Added systemd service manifest and config file
