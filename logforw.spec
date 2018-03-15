@@ -39,6 +39,12 @@ cp irods-%{name}-%{version}/logforw-start.1    %{buildroot}/usr/local/share/man/
 cp irods-%{name}-%{version}/logforw-status.1   %{buildroot}/usr/local/share/man/man1
 cp irods-%{name}-%{version}/logforw-stop.1     %{buildroot}/usr/local/share/man/man1
 
+mkdir -p %{buildroot}/etc/sysconfig
+cp irods-%{name}-%{version}/sysconfig/logforw %{buildroot}/etc/sysconfig/logforw
+
+mkdir -p %{buildroot}/etc/systemd/system
+cp irods-%{name}-%{version}/systemd/logforw.service %{buildroot}/etc/systemd/system/logforw.service
+
 %files
 %defattr(-,root,root,-)
 %attr(755,root,root) /usr/local/bin/logforw
@@ -53,10 +59,16 @@ cp irods-%{name}-%{version}/logforw-stop.1     %{buildroot}/usr/local/share/man/
 %attr(644,root,root) /usr/local/share/man/man1/logforw-status.1
 %attr(644,root,root) /usr/local/share/man/man1/logforw-stop.1
 
+%attr(644,root,root) /etc/sysconfig/logforw
+%attr(644,root,root) /etc/systemd/system/logforw.service
+
+%post
+mkdir -p /var/log/logforw
 
 %changelog
+* Thu Mar 15 2018 Ilari Korhonen <ilarik@kth.se?
+* Added systemd service manifest and config file
+
 * Wed Mar 7 2018 Ilker Manap <manap@kth.se>
 * Added spec file for building rpm
 
-* Thu Mar 15 2018 Ilari Korhonen <ilarik@kth.se?
-* Added systemd service manifest and config file
