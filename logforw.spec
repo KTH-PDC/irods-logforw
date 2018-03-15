@@ -18,7 +18,6 @@ Packager: Ilker Manap <manap@kth.se>
 iRODS log forwarder
 
 %prep
-rm -rf $RPM_BUILD_DIR/*
 
 %setup -q -c
 
