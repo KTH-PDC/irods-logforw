@@ -1,0 +1,8 @@
+# set delay for polling log files
+DELAY=10
+
+# set pattern for log file paths
+PATTERN="/var/lib/irods/iRODS/server/log/rodsLog.*"
+
+# set the path for scanning
+PATH="/var/lib/irods/iRODS/server/log"
