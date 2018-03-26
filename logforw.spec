@@ -3,7 +3,7 @@
 #
 Summary: Log forwarder for irods
 Name: logforw
-Version: 1.0.1
+Version: 1.0.2
 Release: 1
 License: Simplified BSD
 Group: Applications/System
