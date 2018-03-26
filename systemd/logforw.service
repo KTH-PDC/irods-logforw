@@ -1,6 +1,8 @@
 [Service]
 Type=forking
 EnvironmentFile=/etc/sysconfig/logforw
+User=irods
+Group=irods
 ExecStart=/usr/local/bin/logforw -l /var/log/logforw/logforw.log -s $DELAY -p $PATTERN $PATH
 KillMode=process
 Restart=on-failure
